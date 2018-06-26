@@ -46,9 +46,9 @@ def get_customer(customer_id):
   return {'customer_id': data[0], 'phone': data[1], 'address': data[2]}
 
 def get_restaurant(restaurant_id):
-  sql = 'select restaurant_id, phone, food from restaurant where restaurant_id = %s'
+  sql = 'select restaurant_id, restaurant_name, phone, food from restaurant where restaurant_id = %s'
   data =  list(query(sql, restaurant_id)[0])
-  return {'restaurant_id': data[0], 'phone': data[1], 'food': json.loads(data[2])}
+  return {'restaurant_id': data[0], 'restaurant_name': data[1], 'phone': data[2], 'food': json.loads(data[3])}
 
 def write_order(data, price):
   sql = 'insert into orders (customer_id, restaurant_id, date, price, food) values (%s, %s, %s, %s, %s)'
