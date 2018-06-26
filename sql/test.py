@@ -1,8 +1,11 @@
-# !/usr/bin/env python3
-# -*- coding: utf-8 -*- 
-
 import pymysql, traceback, datetime, json
-from settings import settings
+
+settings = dict()
+
+settings['db_host'] =  'localhost'
+settings['db_user'] =  'root'
+settings['db_password'] = '89045095'
+settings['db_database'] = 'eatwhat'
 
 def query(sql, *args):
   try:
@@ -40,14 +43,14 @@ def insert_update(sql, *args):
     print(traceback.format_exc(e))
 
 
-def get_customer(customer_id):
+def get_customer(customer_name):
   sql = 'select customer_id, phone, address from customer where customer_id = %s'
-  data = query(sql, customer_id)[0]
+  data = query(sql, customer_name)[0]
   return {'customer_id': data[0], 'phone': data[1], 'address': data[2]}
 
-def get_restaurant(restaurant_id):
+def get_restaurant(restaurant_name):
   sql = 'select restaurant_id, phone, food from restaurant where restaurant_id = %s'
-  data =  list(query(sql, restaurant_id)[0])
+  data =  list(query(sql, restaurant_name)[0])
   return {'restaurant_id': data[0], 'phone': data[1], 'food': json.loads(data[2])}
 
 def write_order(data, price):
@@ -65,16 +68,10 @@ def count_price(restaurant_id, food_list):
         break
   return price
 
-def get_shopping_list(table_No, restaurant_id):
-  # return: table status, food
-  sql = 'select food from shopping_list where table_No = %s and restaurant_id = %s'
-  data =  list(query(sql, table_No, restaurant_id))
-  if len(data) == 0:   # haven't created this shopping_list
-    sql = 'insert into shopping_list (table_No, restaurant_id) values (%s, %s)'
-    insert_update(sql, table_No, restaurant_id)
-    return []
-  return data[0]
   
 if __name__ == '__main__':
-  food = [{'food_id':1,'num':2},{'food_id':2,'num':1}]
-  print(count_price('zyf', food))
+  sql = 'insert into customer (customer_id, customer_name, phone, address, default_address) values (%s, %s, %s, %s, %s)'
+  insert_update(sql, 'eatme', 'eatme', '1234567890', json.dumps([{"address_id":1,"place":"肾六楼下"}]), 1)
+
+  sql = 'insert into restaurant (restaurant_id, restaurant_name, phone, food) values (%s, %s, %s, %s)'
+  insert_update(sql, 'eatme_res', 'eatme_res', '1234567890', json.dumps([{"food_id": 1,"food_type": "staple","food_name": "麻辣香锅","price": 25.0,"num": 10,"image_url": "/img/1.png","detail": "1"}]))
