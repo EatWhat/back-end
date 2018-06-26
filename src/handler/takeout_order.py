@@ -3,7 +3,7 @@
 import tornado, json, traceback, datetime
 import mysql
 
-class enter_page_table(tornado.web.RequestHandler):
+class enter_page_takeout(tornado.web.RequestHandler):
 
   def initialize(self):
     self.res_status = {}
@@ -12,11 +12,10 @@ class enter_page_table(tornado.web.RequestHandler):
     try:
       customer_id = self.get_argument("customer_id")
       restaurant_id = self.get_argument("restaurant_id")
-      table_No = self.get_argument("table_No")
 
-      food = mysql.get_shopping_list(table_No, restaurant_id)
-      data = mysql.get_restaurant(restaurant_id)
-      data['shopping_list'] = food
+      data = {}
+      data['restaurant_info'] = mysql.get_restaurant(restaurant_id)
+      data['customer_info'] = mysql.get_customer(customer_id)
 
       self.res_status['result'] = data
       self.write(json.dumps(self.res_status))
