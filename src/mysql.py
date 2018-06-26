@@ -72,8 +72,9 @@ def get_shopping_list(table_No, restaurant_id):
   if len(data) == 0:   # haven't created this shopping_list
     sql = 'insert into shopping_list (table_No, restaurant_id) values (%s, %s)'
     insert_update(sql, table_No, restaurant_id)
-    return []
-  return data[0]
+    return None
+
+  return data[0][0]
   
 if __name__ == '__main__':
   food = [{'food_id':1,'num':2},{'food_id':2,'num':1}]
