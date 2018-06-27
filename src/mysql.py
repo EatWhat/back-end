@@ -84,6 +84,18 @@ def write_shopping_list(restaurant_id, table_No, shopping_list):
   sql = 'UPDATE shopping_list SET food = %s WHERE restaurant_id = %s and table_No = %s'
   insert_update(sql, json.dumps(shopping_list), restaurant_id, table_No)
   
+def check_restaurant(restaurant_id, password):
+  sql = 'select * from restaurant where restaurant_id = %s and password = %s'
+  data =  list(query(sql, restaurant_id, password))
+  if len(data) == 0:   # username or password wrong
+    return 0
+  else:
+    return 1
+
+def set_restaurant_status(restaurant_id, status):
+  sql = 'UPDATE restaurant SET status = %s WHERE restaurant_id = %s'
+  insert_update(sql, status, restaurant_id)
+
 if __name__ == '__main__':
   food = [{'food_id':1,'num':2},{'food_id':2,'num':1}]
   print(count_price('zyf', food))

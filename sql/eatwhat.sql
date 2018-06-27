@@ -12,6 +12,8 @@ CREATE TABLE IF NOT EXISTS `restaurant` (
   `restaurant_name` varchar(32) not null,
   `phone` varchar(16) not null,
   `food` json,
+  `password` varchar(32) not null,
+  `status` tinyint(1) not null,
   PRIMARY KEY(`restaurant_id`)
 ) ENGINE = InnoDB DEFAULT CHARSET=utf8;
 
