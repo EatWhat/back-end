@@ -11,9 +11,11 @@ class modify_shopping_list(tornado.web.RequestHandler):
   def post(self):
     try:
       data = json.loads(self.request.body)
-      slist = json.loads(mysql.get_shopping_list(data['table_No'], data['restaurant_id']))
+      slist = mysql.get_shopping_list(data['table_No'], data['restaurant_id'])
       if not slist:
         slist = []
+      else:
+        slist = json.loads(slist)
       slist += data['shopping_list']
       mysql.write_shopping_list(data['restaurant_id'], data['table_No'], slist)
 
