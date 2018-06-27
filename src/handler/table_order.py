@@ -28,3 +28,20 @@ class enter_page_table(tornado.web.RequestHandler):
       self.set_status(403)
       self.finish()
       print(traceback.format_exc(e))
+
+  def post(self):
+    try:
+      data = json.loads(self.request.body)
+      mysql.write_table_order(data)
+      self.res_status['state'] = 200
+      self.res_status['detail'] = '下单成功'
+      self.write(json.dumps(self.res_status))
+      self.finish()
+
+    except Exception as e:
+      self.res_status['state'] = 403
+      self.res_status['detail'] = 'unknown error'
+      self.write(json.dumps(self.res_status))
+      self.set_status(403)
+      self.finish()
+      print(traceback.format_exc(e))

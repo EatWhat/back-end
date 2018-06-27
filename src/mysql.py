@@ -54,6 +54,10 @@ def write_order(data, price):
   sql = 'insert into orders (customer_id, restaurant_id, date, price, food) values (%s, %s, %s, %s, %s)'
   insert_update(sql, data['customer_id'], data['restaurant_id'], data['date'], price, json.dumps(data['food']))
 
+def write_table_order(data):
+  sql = 'insert into table_orders (customer_id, restaurant_id, date, price, food, table_No) values (%s, %s, %s, %s, %s, %s)'
+  insert_update(sql, data['customer_id'], data['restaurant_id'], data['date'], data['price'], json.dumps(data['food']), data['table_No'])
+
 def count_price(restaurant_id, food_list):
   sql = 'select food from restaurant where restaurant_id = %s'
   food_price = json.loads(query(sql, restaurant_id)[0][0])
@@ -66,7 +70,7 @@ def count_price(restaurant_id, food_list):
   return price
 
 def get_shopping_list(table_No, restaurant_id):
-  # return: table status, food
+  # return: food
   sql = 'select food from shopping_list where table_No = %s and restaurant_id = %s'
   data =  list(query(sql, table_No, restaurant_id))
   if len(data) == 0:   # haven't created this shopping_list
@@ -75,6 +79,10 @@ def get_shopping_list(table_No, restaurant_id):
     return None
 
   return data[0][0]
+
+def write_shopping_list(restaurant_id, table_No, shopping_list):
+  sql = 'UPDATE shopping_list SET food = %s WHERE restaurant_id = %s and table_No = %s'
+  insert_update(sql, json.dumps(shopping_list), restaurant_id, table_No)
   
 if __name__ == '__main__':
   food = [{'food_id':1,'num':2},{'food_id':2,'num':1}]
