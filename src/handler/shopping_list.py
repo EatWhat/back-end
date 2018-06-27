@@ -22,7 +22,7 @@ class modify_shopping_list(tornado.web.RequestHandler):
       for each in slist:
         if each['food_id'] not in tmp_dict:
           tmp_dict[each['food_id']] = 0
-        tmp_dict[each['food_id']] += each['num']
+        tmp_dict[each['food_id']] = each['num']
 
       slist = []
       for x, y in tmp_dict.items():
