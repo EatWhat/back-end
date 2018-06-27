@@ -96,6 +96,10 @@ def set_restaurant_status(restaurant_id, status):
   sql = 'UPDATE restaurant SET status = %s WHERE restaurant_id = %s'
   insert_update(sql, status, restaurant_id)
 
+def get_restaurant_status(restaurant_id):
+  sql = 'select status from restaurant where restaurant_id = %s'
+  return query(sql, restaurant_id)[0][0]
+
 if __name__ == '__main__':
   food = [{'food_id':1,'num':2},{'food_id':2,'num':1}]
   print(count_price('zyf', food))

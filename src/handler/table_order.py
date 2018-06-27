@@ -32,9 +32,13 @@ class enter_page_table(tornado.web.RequestHandler):
   def post(self):
     try:
       data = json.loads(self.request.body)
-      mysql.write_table_order(data)
-      self.res_status['state'] = 200
-      self.res_status['detail'] = '下单成功'
+      if mysql.get_restaurant_status(data['restaurant_id']):
+        mysql.write_table_order(data)
+        self.res_status['state'] = 200
+        self.res_status['detail'] = '下单成功'
+      else:
+        self.res_status['state'] = 202
+        self.res_status['detail'] = '商家打烊'
       self.write(json.dumps(self.res_status))
       self.finish()
 
