@@ -12,6 +12,7 @@ class restaurant_login(tornado.web.RequestHandler):
       res = mysql.check_restaurant(data['restaurant_id'], data['password'])
       if res:
         self.res_status['state'] = 200
+        self.res_status['result'] = mysql.get_restaurant(data['restaurant_id'])
       else:
         self.res_status['state'] = 201
 
