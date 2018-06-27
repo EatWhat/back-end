@@ -17,6 +17,17 @@ class modify_shopping_list(tornado.web.RequestHandler):
       else:
         slist = json.loads(slist)
       slist += data['shopping_list']
+      ids = set([x['food_id'] for x in slist])
+      tmp_dict = {}
+      for each in slist:
+        if each['food_id'] not in tmp_dict:
+          tmp_dict[each['food_id']] = 0
+        tmp_dict[each['food_id']] += each['num']
+
+      slist = []
+      for x, y in tmp_dict.items():
+        slist.append({'food_id':x, 'num':y})
+
       mysql.write_shopping_list(data['restaurant_id'], data['table_No'], slist)
 
       self.res_status['result'] = json.dumps(slist)
