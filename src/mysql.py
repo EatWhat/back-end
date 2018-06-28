@@ -69,16 +69,36 @@ def count_price(restaurant_id, food_list):
         break
   return price
 
-def get_shopping_list(table_No, restaurant_id):
+def get_shopping_list(table_No, restaurant_id, customer_id):
   # return: food
-  sql = 'select food from shopping_list where table_No = %s and restaurant_id = %s'
-  data =  list(query(sql, table_No, restaurant_id))
+  sql = 'select food from shopping_list where table_No = %s and restaurant_id = %s and customer_id = %s'
+  data =  list(query(sql, table_No, restaurant_id, customer_id))
+
   if len(data) == 0:   # haven't created this shopping_list
-    sql = 'insert into shopping_list (table_No, restaurant_id) values (%s, %s)'
-    insert_update(sql, table_No, restaurant_id)
+    sql = 'insert into shopping_list (table_No, restaurant_id, customer_id) values (%s, %s, %s)'
+    insert_update(sql, table_No, restaurant_id, customer_id)
     return None
 
   return data[0][0]
+
+def write_customer_shopping_list(food, table_No, restaurant_id, customer_id):
+  # return: food
+  sql = 'select food from shopping_list where table_No = %s and restaurant_id = %s and customer_id = %s'
+  data =  list(query(sql, table_No, restaurant_id, customer_id))
+
+  if len(data) == 0:   # haven't created this shopping_list
+    sql = 'insert into shopping_list (table_No, restaurant_id, customer_id, food) values (%s, %s, %s, %s)'
+    insert_update(sql, table_No, restaurant_id, customer_id, json.dumps(food))
+  else:
+    sql = 'update shopping_list set food = %s where table_No = %s and restaurant_id = %s and customer_id = %s'
+    insert_update(sql, json.dumps(food), table_No, restaurant_id, customer_id)
+
+def get_table_shopping_list(table_No, restaurant_id):
+  sql = 'select food from shopping_list where table_No = %s and restaurant_id = %s'
+  data =  list(query(sql, table_No, restaurant_id))
+
+  print("here!!!!", data)
+  return data
 
 def write_shopping_list(restaurant_id, table_No, shopping_list):
   sql = 'UPDATE shopping_list SET food = %s WHERE restaurant_id = %s and table_No = %s'

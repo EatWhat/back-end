@@ -11,24 +11,19 @@ class modify_shopping_list(tornado.web.RequestHandler):
   def post(self):
     try:
       data = json.loads(self.request.body)
-      slist = mysql.get_shopping_list(data['table_No'], data['restaurant_id'])
-      if not slist:
-        slist = []
-      else:
-        slist = json.loads(slist)
-      slist += data['shopping_list']
-      ids = set([x['food_id'] for x in slist])
+      mysql.write_customer_shopping_list(data['shopping_list'], data['table_No'], data['restaurant_id'], data['customer_id'])
+
+      slist = mysql.get_table_shopping_list(data['table_No'], data['restaurant_id'])
+      # all individual shopping lists of this desk
+      # [[{'food_id':1, 'num':1}], [{'food_id':2, 'num':1}]]
+
+      slist = [json.loads(_[0]) for _ in slist]
       tmp_dict = {}
       for each in slist:
-        if each['food_id'] not in tmp_dict:
-          tmp_dict[each['food_id']] = 0
-        tmp_dict[each['food_id']] = each['num']
-
-      slist = []
-      for x, y in tmp_dict.items():
-        slist.append({'food_id':x, 'num':y})
-
-      mysql.write_shopping_list(data['restaurant_id'], data['table_No'], slist)
+        for ee in each:
+          if ee['food_id'] not in tmp_dict:
+            tmp_dict['food_id'] = 0
+          tmp_dict['food_id'] += ee['num']
 
       self.res_status['result'] = json.dumps(slist)
       self.write(json.dumps(self.res_status))

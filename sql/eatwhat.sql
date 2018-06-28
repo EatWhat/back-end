@@ -48,6 +48,7 @@ CREATE TABLE IF NOT EXISTS `shopping_list` (
   `shopping_list_id` int unsigned not null auto_increment,
   `table_No` int unsigned not null,
   `restaurant_id` varchar(32) not null,
+  `customer_id` varchar(32) not null,
   `food` json,
   PRIMARY KEY(`shopping_list_id`),
   FOREIGN KEY (`restaurant_id`) REFERENCES restaurant(`restaurant_id`)
