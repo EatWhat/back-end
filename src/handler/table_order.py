@@ -15,9 +15,12 @@ class enter_page_table(tornado.web.RequestHandler):
       table_No = self.get_argument("table_No")
 
       private_food = mysql.get_shopping_list(table_No, restaurant_id, customer_id)
+      if not private_food:
+        private_food = []
+        
       public_food = mysql.get_table_shopping_list(table_No, restaurant_id)
 
-      public_food = [json.loads(_[0]) for _ in public_food]
+      public_food = [json.loads(_[0]) for _ in public_food if _[0] != None]
       tmp_dict = {}
       for each in public_food:
         for ee in each:

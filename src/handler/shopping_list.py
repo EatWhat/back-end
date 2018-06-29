@@ -17,7 +17,7 @@ class modify_shopping_list(tornado.web.RequestHandler):
       # all individual shopping lists of this desk
       # [[{'food_id':1, 'num':1}], [{'food_id':2, 'num':1}]]
 
-      slist = [json.loads(_[0]) for _ in slist]
+      slist = [json.loads(_[0]) for _ in slist if _[0] != None]
       tmp_dict = {}
       for each in slist:
         for ee in each:
