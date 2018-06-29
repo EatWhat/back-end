@@ -22,8 +22,12 @@ class modify_shopping_list(tornado.web.RequestHandler):
       for each in slist:
         for ee in each:
           if ee['food_id'] not in tmp_dict:
-            tmp_dict['food_id'] = 0
-          tmp_dict['food_id'] += ee['num']
+            tmp_dict[ee['food_id']] = 0
+          tmp_dict[ee['food_id']] += ee['num']
+
+      slist = []
+      for x, y in tmp_dict.items():
+        slist.append({'food_id': x, 'num': y})
 
       self.res_status['result'] = json.dumps(slist)
       self.write(json.dumps(self.res_status))
