@@ -13,7 +13,7 @@ class restaurant_login(tornado.web.RequestHandler):
       if res:
         self.res_status['state'] = 200
         self.res_status['result'] = mysql.get_restaurant(data['restaurant_id'])
-        self.res_status['order'] = mysql.get_all_shopping_list(data['restaurant_id'])
+        self.res_status['food'] = mysql.get_all_shopping_list(data['restaurant_id'])
       else:
         self.res_status['state'] = 201
 
