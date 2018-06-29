@@ -16,6 +16,6 @@ url_patterns = [
   (r"/table_order", enter_page_table),
   (r"/takeout_order", enter_page_takeout),
   (r"/shopping_list", modify_shopping_list),
-  (r"/rest_login", restaurant_login),
+  (r"/restaurant_login", restaurant_login),
   (r"/restaurant_status", restaurant_status)
 ]
