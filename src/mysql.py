@@ -97,8 +97,14 @@ def get_table_shopping_list(table_No, restaurant_id):
   sql = 'select food from shopping_list where table_No = %s and restaurant_id = %s'
   data =  list(query(sql, table_No, restaurant_id))
 
-  print("here!!!!", data)
   return data
+
+def get_all_shopping_list(restaurant_id):
+  # return: food
+  sql = 'select food from shopping_list where restaurant_id = %s'
+  data =  list(query(sql, restaurant_id))
+
+  return [json.loads(x[0]) for x in data]
 
 def write_shopping_list(restaurant_id, table_No, shopping_list):
   sql = 'UPDATE shopping_list SET food = %s WHERE restaurant_id = %s and table_No = %s'
