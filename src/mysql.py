@@ -63,7 +63,7 @@ def count_price(restaurant_id, food_list):
   food_price = json.loads(query(sql, restaurant_id)[0][0])
   price = 0
 
-  # 遍历订单的每个食物，若菜谱含有该食物，则加上食物的价钱.
+  # Iter all food in order. If a food is availuable in restuarant, add to the total price.
   for food in food_list:
     for each in food_price:
       if food['food_id'] == each['food_id']:
@@ -119,6 +119,31 @@ def check_restaurant(restaurant_id, password):
     return 0
   else:
     return 1
+
+def check_order(restaurant_id, food_list):
+  """
+    Check if the order is valid, that is all food in order are available in the restaurant.
+    May be time consuming, because the code check the foods iterally.
+    Return: 
+      True if order valid
+      False if order invalid.
+  """
+  sql = 'select food from restaurant where restaurant_id = %s'
+  food_price = json.loads(query(sql, restaurant_id)[0][0])
+  price = 0
+
+  for order_food in food_list:
+    is_food_available = False
+
+    for restaurant_food in food_price:
+      if order_food['food_id'] == restaurant_food['food_id']:
+        is_food_available = True
+        break
+
+    # The food is invalid, so the order is invalid.
+    if not is_food_available:
+      return False
+  return True
 
 def set_restaurant_status(restaurant_id, status):
   sql = 'UPDATE restaurant SET status = %s WHERE restaurant_id = %s'
