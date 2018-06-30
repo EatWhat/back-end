@@ -113,6 +113,12 @@ def write_shopping_list(restaurant_id, table_No, shopping_list):
   insert_update(sql, json.dumps(shopping_list), restaurant_id, table_No)
   
 def check_restaurant(restaurant_id, password):
+  """
+    Check if the restaurant id matches the password.
+    Return:
+      True if they match.
+      False if password is wrong or id doesn't exist.
+  """
   sql = 'select * from restaurant where restaurant_id = %s and password = %s'
   data =  list(query(sql, restaurant_id, password))
   if len(data) == 0:   # username or password wrong
