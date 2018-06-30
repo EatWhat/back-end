@@ -62,6 +62,8 @@ def count_price(restaurant_id, food_list):
   sql = 'select food from restaurant where restaurant_id = %s'
   food_price = json.loads(query(sql, restaurant_id)[0][0])
   price = 0
+
+  # 遍历订单的每个食物，若菜谱含有该食物，则加上食物的价钱.
   for food in food_list:
     for each in food_price:
       if food['food_id'] == each['food_id']:
