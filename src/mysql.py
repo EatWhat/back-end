@@ -58,6 +58,16 @@ def write_table_order(data):
   sql = 'insert into table_orders (customer_id, restaurant_id, date, price, food, table_No) values (%s, %s, %s, %s, %s, %s)'
   insert_update(sql, data['customer_id'], data['restaurant_id'], data['date'], data['price'], json.dumps(data['food']), data['table_No'])
 
+def get_all_table_order(restaurant_id):
+  sql = 'SELECT date, table_No, price, food FROM table_orders WHERE restaurant_id = %s'
+  data = list(query(sql, restaurant_id))
+
+  for i in range(len(data)):
+    data[i] = list(data[i])
+    data[i][3] = json.loads(data[i][3])
+
+  return data
+
 def count_price(restaurant_id, food_list):
   sql = 'select food from restaurant where restaurant_id = %s'
   food_price = json.loads(query(sql, restaurant_id)[0][0])
@@ -106,7 +116,10 @@ def get_all_shopping_list(restaurant_id):
   sql = 'select food from shopping_list where restaurant_id = %s'
   data =  list(query(sql, restaurant_id))
 
-  return [json.loads(x[0]) for x in data]
+  data = [json.loads(x[0]) for x in data if x[0]]
+  data = [x for x in data if len(x) > 0]
+
+  return data
 
 def write_shopping_list(restaurant_id, table_No, shopping_list):
   sql = 'UPDATE shopping_list SET food = %s WHERE restaurant_id = %s and table_No = %s'
