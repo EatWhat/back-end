@@ -62,11 +62,12 @@ def get_all_table_order(restaurant_id):
   sql = 'SELECT date, table_No, price, food FROM table_orders WHERE restaurant_id = %s'
   data = list(query(sql, restaurant_id))
 
-  for i in range(len(data)):
-    data[i] = list(data[i])
-    data[i][3] = json.loads(data[i][3])
+  rtn = []
 
-  return data
+  for i in range(len(data)):
+    rtn.append({'date': data[i][0], 'table_No': data[i][1], 'price': data[i][2], 'food': json.loads(data[i][3])})
+
+  return rtn
 
 def count_price(restaurant_id, food_list):
   sql = 'select food from restaurant where restaurant_id = %s'

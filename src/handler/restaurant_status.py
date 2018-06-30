@@ -44,3 +44,23 @@ class modify_food(tornado.web.RequestHandler):
       self.set_status(403)
       self.finish()
       print(traceback.format_exc(e))
+
+class order_refresh(tornado.web.RequestHandler):
+
+  def initialize(self):
+    self.res_status = {}
+
+  def get(self):
+    try:
+      restaurant_id = self.get_argument("restaurant_id")
+      data = mysql.get_all_table_order(restaurant_id)
+      self.res_status['orders'] = data
+      self.write(json.dumps(self.res_status))
+      self.finish()
+
+    except Exception as e:
+      self.res_status['result'] = 'error'
+      self.write(json.dumps(self.res_status))
+      self.set_status(403)
+      self.finish()
+      print(traceback.format_exc(e))
