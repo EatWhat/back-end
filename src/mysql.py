@@ -126,6 +126,10 @@ def get_restaurant_status(restaurant_id):
   sql = 'select status from restaurant where restaurant_id = %s'
   return query(sql, restaurant_id)[0][0]
 
+def write_food(restaurant_id, food):
+  sql = 'UPDATE restaurant SET food = %s WHERE restaurant_id = %s'
+  insert_update(sql, json.dumps(food), restaurant_id)
+
 if __name__ == '__main__':
   food = [{'food_id':1,'num':2},{'food_id':2,'num':1}]
   print(count_price('zyf', food))
