@@ -13,11 +13,23 @@ class order(tornado.web.RequestHandler):
       print(self.request.body)
       data = json.loads(self.request.body)
       print(data)
-      price = mysql.count_price(data['restaurant_id'], data['food'])
-      print(price)
-      mysql.write_order(data, price)
-      self.res_status['state'] = 200
-      self.res_status['detail'] = '下单成功'
+      if mysql.get_restaurant_status(data['restaurant_id']):
+        if mysql.check_order(data['restaurant_id'], data['food']):
+          # Count order price.
+          price = mysql.count_price(data['restaurant_id'], data['food'])
+          self.res_status['state'] = 200
+          self.res_status['detail'] = '下单成功'
+          mysql.write_order(data, price)
+          print(price)
+        else:
+          # The order is invalid.
+          self.res_status['state'] = 201
+          self.res_status['detail'] = '食物缺失'
+      else:
+        # The resturant is resting.
+        self.res_status['state'] = 202
+        self.res_status['detail'] = '商家打烊'
+
       self.write(json.dumps(self.res_status))
       self.finish()
 

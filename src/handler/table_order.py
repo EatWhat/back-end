@@ -17,10 +17,11 @@ class enter_page_table(tornado.web.RequestHandler):
       private_food = mysql.get_shopping_list(table_No, restaurant_id, customer_id)
       if not private_food:
         private_food = []
-        
-      public_food = mysql.get_table_shopping_list(table_No, restaurant_id)
 
+      public_food = mysql.get_table_shopping_list(table_No, restaurant_id)
       public_food = [json.loads(_[0]) for _ in public_food if _[0] != None]
+
+      # Calculate total num for each food and save them in a temp dict.
       tmp_dict = {}
       for each in public_food:
         for ee in each:
@@ -28,6 +29,7 @@ class enter_page_table(tornado.web.RequestHandler):
             tmp_dict[ee['food_id']] = 0
           tmp_dict[ee['food_id']] += ee['num']
 
+      # Put all puclic food info into a list.
       public_food = []
       for x, y in tmp_dict.items():
         public_food.append({'food_id': x, 'num': y})
