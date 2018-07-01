@@ -7,6 +7,10 @@ class restaurant_status(tornado.web.RequestHandler):
     self.res_status = {}
 
   def post(self):
+    # Update the status of a restaurant.
+    # {data['status']}:
+    #   1 if the restaurant is working.
+    #   0 if the restaurant is resting.
     try:
       data = json.loads(self.request.body)
       mysql.set_restaurant_status(data['restaurant_id'], data['status'])
@@ -29,6 +33,7 @@ class modify_food(tornado.web.RequestHandler):
     self.res_status = {}
 
   def post(self):
+    # Update the food list of a restaurant, given the restaurant's id.
     try:
       data = json.loads(self.request.body)
       mysql.write_food(data['restaurant_id'], data['food'])
@@ -51,6 +56,7 @@ class order_refresh(tornado.web.RequestHandler):
     self.res_status = {}
 
   def get(self):
+    # Update all table orders of a restaurant.
     try:
       restaurant_id = self.get_argument("restaurant_id")
       data = mysql.get_all_table_order(restaurant_id)

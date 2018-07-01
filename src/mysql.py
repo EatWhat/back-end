@@ -41,24 +41,31 @@ def insert_update(sql, *args):
 
 
 def get_customer(customer_id):
+  # Given the {customer_id}, get the {customer_id, phone, address} of a customer.
   sql = 'select customer_id, phone, address from customer where customer_id = %s'
   data = query(sql, customer_id)[0]
   return {'customer_id': data[0], 'phone': data[1], 'address': data[2]}
 
 def get_restaurant(restaurant_id):
+  # Given the {restaurant_id} get the {restaurant_id, phone, food} of a restaurant.
   sql = 'select restaurant_id, restaurant_name, phone, food from restaurant where restaurant_id = %s'
   data =  list(query(sql, restaurant_id)[0])
   return {'restaurant_id': data[0], 'restaurant_name': data[1], 'phone': data[2], 'food': json.loads(data[3])}
 
 def write_order(data, price):
+  # Insert an order.
+  # [Not used]
   sql = 'insert into orders (customer_id, restaurant_id, date, price, food) values (%s, %s, %s, %s, %s)'
   insert_update(sql, data['customer_id'], data['restaurant_id'], data['date'], price, json.dumps(data['food']))
 
 def write_table_order(data):
+  # Insert an table order made by a customer.
   sql = 'insert into table_orders (customer_id, restaurant_id, date, price, food, table_No) values (%s, %s, %s, %s, %s, %s)'
   insert_update(sql, data['customer_id'], data['restaurant_id'], data['date'], data['price'], json.dumps(data['food']), data['table_No'])
 
 def get_all_table_order(restaurant_id):
+  # Return all table orders of a restaurant.
+  # The orders can be made by different customers of different tables.
   sql = 'SELECT date, table_No, price, food FROM table_orders WHERE restaurant_id = %s'
   data = list(query(sql, restaurant_id))
 
@@ -70,6 +77,8 @@ def get_all_table_order(restaurant_id):
   return rtn
 
 def count_price(restaurant_id, food_list):
+  # Count the total price of the food list.
+  # [Not used]
   sql = 'select food from restaurant where restaurant_id = %s'
   food_price = json.loads(query(sql, restaurant_id)[0][0])
   price = 0
@@ -83,7 +92,8 @@ def count_price(restaurant_id, food_list):
   return price
 
 def get_shopping_list(table_No, restaurant_id, customer_id):
-  # return: food
+  # Get all food in a customer's shopping list at a table.
+  # If the list doesn't exist, create one.
   sql = 'select food from shopping_list where table_No = %s and restaurant_id = %s and customer_id = %s'
   data = list(query(sql, table_No, restaurant_id, customer_id))
 
@@ -95,6 +105,10 @@ def get_shopping_list(table_No, restaurant_id, customer_id):
   return data[0][0]
 
 def write_customer_shopping_list(food, table_No, restaurant_id, customer_id):
+  # Write the shopping list made by a customer of a table.
+  # If the list exist in the database, update it.
+  # Otherwise, create one in the database.
+
   # Check if customer have created this shopping_list before.
   sql = 'select food from shopping_list where table_No = %s and restaurant_id = %s and customer_id = %s'
   data = list(query(sql, table_No, restaurant_id, customer_id))
@@ -107,13 +121,14 @@ def write_customer_shopping_list(food, table_No, restaurant_id, customer_id):
     insert_update(sql, json.dumps(food), table_No, restaurant_id, customer_id)
 
 def get_table_shopping_list(table_No, restaurant_id):
+  # Get all food ordered by a table.
   sql = 'select food from shopping_list where table_No = %s and restaurant_id = %s'
   data = list(query(sql, table_No, restaurant_id))
 
   return data
 
 def get_all_shopping_list(restaurant_id):
-  # return: food
+  # Get all food ordered in a restaurant.
   sql = 'select food from shopping_list where restaurant_id = %s'
   data = list(query(sql, restaurant_id))
 
@@ -166,14 +181,25 @@ def check_order(restaurant_id, food_list):
   return True
 
 def set_restaurant_status(restaurant_id, status):
+  """
+  Update a restaurant's status.
+  :param restaurant_id: The id of a restaurant.
+  :param status: 1 if the restaurant is working, 0 if resting.
+  """
   sql = 'UPDATE restaurant SET status = %s WHERE restaurant_id = %s'
   insert_update(sql, status, restaurant_id)
 
 def get_restaurant_status(restaurant_id):
+  """
+  Get a restaurant's status(working or resting).
+  :param restaurant_id: The id of a restaurant.
+  :return: 1 if the restaurant is working, 0 if resting.
+  """
   sql = 'select status from restaurant where restaurant_id = %s'
   return query(sql, restaurant_id)[0][0]
 
 def write_food(restaurant_id, food):
+  # Update the food list of a restaurant.
   sql = 'UPDATE restaurant SET food = %s WHERE restaurant_id = %s'
   insert_update(sql, json.dumps(food), restaurant_id)
 

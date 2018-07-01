@@ -9,6 +9,10 @@ class modify_shopping_list(tornado.web.RequestHandler):
     self.res_status = {}
 
   def post(self):
+    """
+    Update the shopping list of a customer at a table.
+    If update successfully, response [all foods] ordered by [every customer at the table].
+    """
     try:
       data = json.loads(self.request.body)
       mysql.write_customer_shopping_list(data['shopping_list'], data['table_No'], data['restaurant_id'], data['customer_id'])

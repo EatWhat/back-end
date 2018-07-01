@@ -9,6 +9,11 @@ class get_customer_name(tornado.web.RequestHandler):
     self.res_status = {}
 
   def get(self, customer_name):
+    """
+    Given the name of a customer,
+    response the customer's detail information.
+    :param customer_name: The customer's name.
+    """
     try:
       data = mysql.get_customer(customer_name)
       self.res_status['result'] = data
@@ -28,6 +33,11 @@ class get_restaurant_name(tornado.web.RequestHandler):
     self.res_status = {}
 
   def get(self, restaurant_name):
+    """
+    Given the name of a restaurant,
+    response the restaurant's detail information.
+    :param restaurant_name: The restaurant's name.
+    """
     try:
       data = mysql.get_restaurant(restaurant_name)
       self.res_status['result'] = data

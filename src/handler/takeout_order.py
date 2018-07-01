@@ -13,9 +13,10 @@ class enter_page_takeout(tornado.web.RequestHandler):
       customer_id = self.get_argument("customer_id")
       restaurant_id = self.get_argument("restaurant_id")
 
-      data = {}
-      data['restaurant_info'] = mysql.get_restaurant(restaurant_id)
-      data['customer_info'] = mysql.get_customer(customer_id)
+      data = {
+        'restaurant_info': mysql.get_restaurant(restaurant_id),
+        'customer_info': mysql.get_customer(customer_id)
+      }
 
       self.res_status['result'] = data
       self.write(json.dumps(self.res_status))

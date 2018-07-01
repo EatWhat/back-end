@@ -44,16 +44,19 @@ def insert_update(sql, *args):
 
 
 def get_customer(customer_name):
+  # Given the {customer_id}, get the {customer_id, phone, address} of a customer.
   sql = 'select customer_id, phone, address from customer where customer_id = %s'
   data = query(sql, customer_name)[0]
   return {'customer_id': data[0], 'phone': data[1], 'address': data[2]}
 
 def get_restaurant(restaurant_name):
+  # Given the {restaurant_id} get the {restaurant_id, phone, food} of a restaurant.
   sql = 'select restaurant_id, phone, food from restaurant where restaurant_id = %s'
   data =  list(query(sql, restaurant_name)[0])
   return {'restaurant_id': data[0], 'phone': data[1], 'food': json.loads(data[2])}
 
 def write_order(data, price):
+  # Insert an order with (customer_id, restaurant_id, date, price, food)
   sql = 'insert into orders (customer_id, restaurant_id, date, price, food) values (%s, %s, %s, %s, %s)'
   insert_update(sql, data['customer_id'], data['restaurant_id'], data['date'], price, json.dumps(data['food']))
 

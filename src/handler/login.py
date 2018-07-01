@@ -7,6 +7,11 @@ class restaurant_login(tornado.web.RequestHandler):
     self.res_status = {}
 
   def post(self):
+    """
+    Restaurant login. Given the id and password of a restaurant, check if they match.
+    If match, response the restaurant's information,
+     all shopping lists and all table orders of the restaurant.
+    """
     try:
       data = json.loads(self.request.body)
       res = mysql.check_restaurant(data['restaurant_id'], data['password'])

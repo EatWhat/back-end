@@ -10,6 +10,10 @@ class enter_page_table(tornado.web.RequestHandler):
     self.res_status = {}
 
   def get(self):
+    """
+    Response the food of shopping list of the customer at the table
+    and all foods ordered at the table.
+    """
     try:
       customer_id = self.get_argument("customer_id")
       restaurant_id = self.get_argument("restaurant_id")
@@ -53,6 +57,11 @@ class enter_page_table(tornado.web.RequestHandler):
       print(traceback.format_exc(e))
 
   def post(self):
+    """
+    Update the order of a customer.
+    Response 200 if the restaurant is working
+      and 201 if the restaurant is resting.
+    """
     try:
       data = json.loads(self.request.body)
       if mysql.get_restaurant_status(data['restaurant_id']):
