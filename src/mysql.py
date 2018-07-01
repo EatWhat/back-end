@@ -85,7 +85,7 @@ def count_price(restaurant_id, food_list):
 def get_shopping_list(table_No, restaurant_id, customer_id):
   # return: food
   sql = 'select food from shopping_list where table_No = %s and restaurant_id = %s and customer_id = %s'
-  data =  list(query(sql, table_No, restaurant_id, customer_id))
+  data = list(query(sql, table_No, restaurant_id, customer_id))
 
   if len(data) == 0:   # haven't created this shopping_list
     sql = 'insert into shopping_list (table_No, restaurant_id, customer_id) values (%s, %s, %s)'
@@ -95,27 +95,27 @@ def get_shopping_list(table_No, restaurant_id, customer_id):
   return data[0][0]
 
 def write_customer_shopping_list(food, table_No, restaurant_id, customer_id):
-  # return: food
+  # Check if customer have created this shopping_list before.
   sql = 'select food from shopping_list where table_No = %s and restaurant_id = %s and customer_id = %s'
-  data =  list(query(sql, table_No, restaurant_id, customer_id))
+  data = list(query(sql, table_No, restaurant_id, customer_id))
 
-  if len(data) == 0:   # haven't created this shopping_list
+  if len(data) == 0:  # Haven't created this shopping_list. create one.
     sql = 'insert into shopping_list (table_No, restaurant_id, customer_id, food) values (%s, %s, %s, %s)'
     insert_update(sql, table_No, restaurant_id, customer_id, json.dumps(food))
-  else:
+  else:  # Update customer's shopping_list.
     sql = 'update shopping_list set food = %s where table_No = %s and restaurant_id = %s and customer_id = %s'
     insert_update(sql, json.dumps(food), table_No, restaurant_id, customer_id)
 
 def get_table_shopping_list(table_No, restaurant_id):
   sql = 'select food from shopping_list where table_No = %s and restaurant_id = %s'
-  data =  list(query(sql, table_No, restaurant_id))
+  data = list(query(sql, table_No, restaurant_id))
 
   return data
 
 def get_all_shopping_list(restaurant_id):
   # return: food
   sql = 'select food from shopping_list where restaurant_id = %s'
-  data =  list(query(sql, restaurant_id))
+  data = list(query(sql, restaurant_id))
 
   data = [json.loads(x[0]) for x in data if x[0]]
   data = [x for x in data if len(x) > 0]
@@ -134,7 +134,7 @@ def check_restaurant(restaurant_id, password):
       False if password is wrong or id doesn't exist.
   """
   sql = 'select * from restaurant where restaurant_id = %s and password = %s'
-  data =  list(query(sql, restaurant_id, password))
+  data = list(query(sql, restaurant_id, password))
   if len(data) == 0:   # username or password wrong
     return 0
   else:
@@ -176,6 +176,7 @@ def get_restaurant_status(restaurant_id):
 def write_food(restaurant_id, food):
   sql = 'UPDATE restaurant SET food = %s WHERE restaurant_id = %s'
   insert_update(sql, json.dumps(food), restaurant_id)
+
 
 if __name__ == '__main__':
   food = [{'food_id':1,'num':2},{'food_id':2,'num':1}]

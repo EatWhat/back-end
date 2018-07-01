@@ -3,6 +3,7 @@
 import tornado, json, traceback, datetime
 import mysql
 
+
 class enter_page_table(tornado.web.RequestHandler):
 
   def initialize(self):
@@ -14,14 +15,16 @@ class enter_page_table(tornado.web.RequestHandler):
       restaurant_id = self.get_argument("restaurant_id")
       table_No = self.get_argument("table_No")
 
+      # Get the foods ordered by customer.
       private_food = mysql.get_shopping_list(table_No, restaurant_id, customer_id)
       if not private_food:
         private_food = []
 
+      # Get all foods ordered by the table.
       public_food = mysql.get_table_shopping_list(table_No, restaurant_id)
       public_food = [json.loads(_[0]) for _ in public_food if _[0] != None]
 
-      # Calculate total num for each food and save them in a temp dict.
+      # Calculate total num for each public food and save them in a temp dict.
       tmp_dict = {}
       for each in public_food:
         for ee in each:
